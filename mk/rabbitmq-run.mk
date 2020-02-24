@@ -60,6 +60,7 @@ node_log_base = $(call node_tmpdir,$(1))/log
 node_mnesia_base = $(call node_tmpdir,$(1))/mnesia
 node_mnesia_dir = $(call node_mnesia_base,$(1))/$(1)
 node_quorum_dir = $(call node_mnesia_dir,$(1))/quorum
+node_stream_dir = $(call node_mnesia_dir,$(1))/stream
 node_schema_dir = $(call node_tmpdir,$(1))/schema
 node_plugins_expand_dir = $(call node_tmpdir,$(1))/plugins
 node_feature_flags_file = $(call node_tmpdir,$(1))/feature_flags
@@ -76,6 +77,7 @@ RABBITMQ_LOG_BASE ?= $(call node_log_base,$(RABBITMQ_NODENAME_FOR_PATHS))
 RABBITMQ_MNESIA_BASE ?= $(call node_mnesia_base,$(RABBITMQ_NODENAME_FOR_PATHS))
 RABBITMQ_MNESIA_DIR ?= $(call node_mnesia_dir,$(RABBITMQ_NODENAME_FOR_PATHS))
 RABBITMQ_QUORUM_DIR ?= $(call node_quorum_dir,$(RABBITMQ_NODENAME_FOR_PATHS))
+RABBITMQ_STREAM_DIR ?= $(call node_stream_dir,$(RABBITMQ_NODENAME_FOR_PATHS))
 RABBITMQ_SCHEMA_DIR ?= $(call node_schema_dir,$(RABBITMQ_NODENAME_FOR_PATHS))
 RABBITMQ_PLUGINS_EXPAND_DIR ?= $(call node_plugins_expand_dir,$(RABBITMQ_NODENAME_FOR_PATHS))
 RABBITMQ_FEATURE_FLAGS_FILE ?= $(call node_feature_flags_file,$(RABBITMQ_NODENAME_FOR_PATHS))
@@ -105,6 +107,7 @@ RABBITMQ_LOG_BASE="$(call node_log_base,$(2))" \
 RABBITMQ_MNESIA_BASE="$(call node_mnesia_base,$(2))" \
 RABBITMQ_MNESIA_DIR="$(call node_mnesia_dir,$(2))" \
 RABBITMQ_QUORUM_DIR="$(call node_quorum_dir,$(2))" \
+RABBITMQ_STREAM_DIR="$(call node_stream_dir,$(2))" \
 RABBITMQ_SCHEMA_DIR="$(call node_schema_dir,$(2))" \
 RABBITMQ_FEATURE_FLAGS_FILE="$(call node_feature_flags_file,$(2))" \
 RABBITMQ_PLUGINS_DIR="$(if $(RABBITMQ_PLUGINS_DIR),$(RABBITMQ_PLUGINS_DIR),$(RMQ_PLUGINS_DIR))" \
@@ -171,6 +174,9 @@ $(if $(RABBITMQ_NODE_PORT),      {tcp_listeners$(COMMA) [$(shell echo "$$((61613
     ]},
   {ra, [
       {data_dir, "$(RABBITMQ_QUORUM_DIR)"}
+    ]},
+  {osiris, [
+      {data_dir, "$(RABBITMQ_STREAM_DIR)"}
     ]}
 ].
 endef
@@ -206,6 +212,9 @@ define test_rabbitmq_config_with_tls
   ]},
   {ra, [
       {data_dir, "$(RABBITMQ_QUORUM_DIR)"}
+    ]},
+  {osiris, [
+      {data_dir, "$(RABBITMQ_STREAM_DIR)"}
     ]}
 ].
 endef
